@@ -1,0 +1,43 @@
+import React, {useEffect, useState} from 'react';
+import './App.css';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+
+
+const MAX_TOKENS = 76159;
+
+interface TokenResponse {
+    items: [],
+    next_page_params: {
+        items_count: 50,
+        unique_token: string
+    }
+}
+
+function App() {
+
+    const [tokens, setTokens] = useState([]);
+    const [remainingTokens, setRemainingTokens] = useState(100_000);
+    useEffect(() => {
+        const fetchDataForPosts = async () => {
+
+            const url = `https://base.blockscout.com/api/v2/tokens/0x26a1F8813dF5a318Ed7aA1091C30dB0f25727a18/instances?items_count=100&apikey=6aea6854-3a68-459a-b228-ccbcdf9ae6fa&unique_token=${remainingTokens}`;
+            const res: TokenResponse = await fetch(url).then(response => response.json());
+            setTokens(tokens => [...tokens, ...res.items]);
+            const uniqueToken = parseInt(res.next_page_params.unique_token);
+            setRemainingTokens(uniqueToken);
+            console.log(res.next_page_params.unique_token)
+            console.log(uniqueToken)
+        };
+        if (remainingTokens > 1) fetchDataForPosts();
+    }, [remainingTokens])
+    console.log(tokens)
+    return (
+        <div className="App">
+            <ProgressBar now={MAX_TOKENS - remainingTokens}/>
+            <h1>traits</h1>
+            <button className="btn btn-secondary">Secondary</button>
+        </div>
+    );
+}
+
+export default App;
