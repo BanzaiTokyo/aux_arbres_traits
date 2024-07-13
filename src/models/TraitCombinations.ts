@@ -1,4 +1,4 @@
-export interface TraitCombinations {
+export interface TraitCombination {
     quantity: number;
     traitCombination: {
         treeChoice: string;
@@ -16,7 +16,7 @@ export interface TraitCombinations {
 
 }
 
-export const mockTraits: TraitCombinations[] = [
+export const mockTraits: TraitCombination[] = [
     {
         quantity: 10,
         traitCombination: {
