@@ -23,27 +23,7 @@ const TokensTable = () => {
     let aliasFilter = columnFilters.find((fil) => fil.id === 'alias');
     let aliasFilterString = aliasFilter != null ? String(aliasFilter.value) : "";
 
-
-    useEffect(() => {
-        function getOrderUrlSearchParam() {
-            if (sorting.length === 0) return '';
-            return '&order_by=' + (sorting[0].desc ? `-${sorting[0].id}` : sorting[0].id);
-        }
-
-        const orderBy: string = getOrderUrlSearchParam();
-        const searchAlias = aliasFilterString != null && aliasFilterString.length > 1 ? `&search=${aliasFilterString}` : "";
-        setIsLoading(true);
-
-        fetch(`${apiBaseUrl}artists?offset=${pagination.pageIndex * rowsPerPage}${orderBy}${searchAlias}`)
-            .then(response => response.json())
-            .then((response: ApiResponse<Profile>) => {
-                setTotalRecords(response.meta.totalRowCount);
-                setLoadedUsers(response.data);
-                setIsLoading(false);
-            });
-    }, [pagination.pageIndex, aliasFilterString, sorting]);
-
-    const columns = useMemo<MRT_ColumnDef<Profile>[]>(
+    const columns = useMemo<MRT_ColumnDef<any>[]>(
         () => [
             {
                 id: 'position',
