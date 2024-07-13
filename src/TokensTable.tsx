@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 //Material-UI Imports
 import {Box,} from '@mui/material';
@@ -21,6 +21,10 @@ const TokensTable = () => {
         pageIndex: 0,
         pageSize: rowsPerPage,
     });
+
+    useEffect(() => {
+        countEntriesByAttributes();
+    }, []);
 
     const keysToCamelCase = (obj) => {
         const camelCaseObj = {};
@@ -68,8 +72,8 @@ const TokensTable = () => {
                             traitCombination: keysToCamelCase(traits),
                             ids: counts[key].map(String)
                         }
-                    }).sort((a, b) => b.count - a.count)
-                    console.log(result);
+                    }).sort((a, b) => b.quantity - a.quantity);
+                    setTokenTraits(result.slice(0, 100));
                 }
             };
 
