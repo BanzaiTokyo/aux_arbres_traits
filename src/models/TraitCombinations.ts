@@ -13,7 +13,6 @@ export interface TraitCombination {
         thread: string
     };
     ids: string[];
-
 }
 
 export const mockTraits: TraitCombination[] = [

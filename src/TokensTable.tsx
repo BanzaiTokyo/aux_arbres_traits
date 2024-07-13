@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, {useMemo, useState} from 'react';
 
 //Material-UI Imports
@@ -19,6 +21,67 @@ const TokensTable = () => {
         pageIndex: 0,
         pageSize: rowsPerPage,
     });
+
+    const keysToCamelCase = (obj) => {
+        const camelCaseObj = {};
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const camelCaseKey = key.toLowerCase().replace(/(\s\w)/g, (matches) =>
+                    matches.toUpperCase().replace(/\s/, '')
+                );
+                camelCaseObj[camelCaseKey] = obj[key];
+            }
+        }
+        return camelCaseObj;
+    }
+
+    const countEntriesByAttributes = () => {
+        const db = indexedDB.open('tokens_db', 1);
+        db.onsuccess = (event) => {
+            // @ts-ignore
+            const transaction = event.target.result.transaction('tokens', 'readonly');
+            const store = transaction.objectStore('tokens');
+            const cursorRequest = store.openCursor();
+
+            const counts = {};
+
+            cursorRequest.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const token = cursor.value;
+                    const keyComponents = { ...token };
+                    delete keyComponents["id"];
+                    const key = JSON.stringify(keyComponents);
+
+                    if (key in counts) {
+                        counts[key].push(token.id);
+                    } else {
+                        counts[key] = [token.id];
+                    }
+
+                    cursor.continue();
+                } else {
+                    const result = Object.keys(counts).map(key => {
+                        const traits = JSON.parse(key);
+                        return {
+                            quantity: counts[key].length,
+                            traitCombination: keysToCamelCase(traits),
+                            ids: counts[key].map(String)
+                        }
+                    }).sort((a, b) => b.count - a.count)
+                    console.log(result);
+                }
+            };
+
+            cursorRequest.onerror = (event) => {
+                console.error('Error reading cursor:', event.target.error);
+            };
+        };
+
+        db.onerror = (event) => {
+            console.error('Error opening database:', event.target.errorCode);
+        };
+    };
 
     const columns = useMemo<MRT_ColumnDef<TraitCombination>[]>(
         () => [

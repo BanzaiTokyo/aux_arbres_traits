@@ -5,3 +5,8 @@ export type TokenResponse = {
         unique_token: string
     }
 }
+
+export type SingleTokenType = {
+    id: string;
+    image_url: string;
+}

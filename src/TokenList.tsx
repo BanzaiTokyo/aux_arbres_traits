@@ -1,33 +1,37 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import SingleToken from "./SingleToken";
+import {SingleTokenType} from "./models/TokensResponse";
+require('dotenv').config()
 
-
-const MAX_TOKENS = 76159;
-
-interface TokenResponse {
-    items: [],
-    next_page_params: {
-        items_count: 50,
-        unique_token: string
-    }
-}
+const BLOCKSCOUT_API_KEY = 'BLOCKSCOUT_API_KEY'
 
 interface TokenListProps {
-    ids:string[]
+    ids: string[]
 }
 
-interface TokenMeta {
-    url:string;
-}
+function TokenList(props: TokenListProps) {
+    const [tokens, setTokens] = useState<SingleTokenType[]>([]);
 
-function TokenList(props:TokenListProps) {
-    const [tokens, setTokens] = useState<TokenMeta[]>([]);
+    useEffect(() => {
+        const firstFive = props.ids.length >=5 ? props.ids.slice(0, 5) : props.ids;
 
+        firstFive.forEach(id=>{
+            const url = `https://base.blockscout.com/api/v2/tokens/0x26a1F8813dF5a318Ed7aA1091C30dB0f25727a18/instances/${id}?apikey=${BLOCKSCOUT_API_KEY}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then((response: SingleTokenType[]) => {
+                    setTokens(tokens => [...tokens, ...response]);
+                });
+        })
+
+    }, [])
 
     return (
-        <div>{tokens.map(token => {return <SingleToken url={token.url}/>})}</div>
+        <div>{tokens.map(token => {
+            return <SingleToken url={token.image_url}/>
+        })}</div>
     );
 }
 
