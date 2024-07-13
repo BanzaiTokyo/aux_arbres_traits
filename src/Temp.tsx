@@ -1,20 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import {TokenResponse} from "./models/TokensResponse";
 require('dotenv').config()
 
 const BLOCKSCOUT_API_KEY = 'BLOCKSCOUT_API_KEY'
 
 
 const MAX_TOKENS = 76159;
-
-interface TokenResponse {
-    items: [],
-    next_page_params: {
-        items_count: 50,
-        unique_token: string
-    }
-}
 
 function App() {
 
