@@ -1,9 +1,10 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 //Material-UI Imports
-import {Box, Button, Typography,} from '@mui/material';
+import {Box,} from '@mui/material';
 
 import MaterialReactTable, {MRT_ColumnDef, MRT_ColumnFiltersState, MRT_SortingState} from 'material-react-table';
+import TokenList from "./TokenList";
 
 
 const TokensTable = () => {
@@ -12,7 +13,7 @@ const TokensTable = () => {
     const [sorting, setSorting] = useState<MRT_SortingState>([{id: "total_value", desc: true}]);
 
     const rowsPerPage = 10;
-    const [loadedUsers, setLoadedUsers] = useState<Profile[]>([]);
+    const [loadedTokens, setLoadedTokens] = useState<Profile[]>([]);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: rowsPerPage,
@@ -99,7 +100,7 @@ const TokensTable = () => {
     return (
         <MaterialReactTable
             columns={columns}
-            data={loadedUsers}
+            data={loadedTokens}
             positionToolbarAlertBanner="bottom"
             enableColumnActions={false}
             enableTopToolbar={false}
@@ -140,56 +141,8 @@ const TokensTable = () => {
                         gap: '1rem',
                     }}
                 >
-                    <img
-                        alt="avatar"
-                        height={200}
-                        src={row.original.thumbnail_url}
-                        loading="lazy"
-                    />
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignContent: "stretch",
-                        gap: '1rem',
-                        alignItems: "center",
-                        flexGrow: 2,
-                    }}>
-                        <Box sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: "center",
-                            flexGrow: 0,
-                            minWidth: 200,
-                        }}>
-                            <Typography
-                                variant="h4">{row.original.tezos_domain || row.original.tezos_profile_name}
-                            </Typography>
-                            {row.original.twitter_handle && <Typography variant={"caption"}>
-                                <a href={`https://twitter.com/${row.original.twitter_handle}`}>@{row.original.twitter_handle}</a>
-                            </Typography>}
+                    <TokenList ids={tokenIds}/>
 
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                flexGrow: 2,
-                                alignItems: "center",
-                                alignSelf: 'stretch',
-                            }}>
-                                <Button size="small"><a
-                                    href={`https://objkt.com/profile/${row.original.wallet}`}>Objkt.com</a></Button>
-                            </Box>
-                            <Button variant="outlined" style={{color: 'white'}}><a
-                                href={`/${PROFILE_PATH}/${row.original.wallet}`}>Artist's
-                                profile</a></Button>
-                        </Box>
-                        <Box sx={{
-                            display: 'flex',
-                            flexGrow: 3
-                        }}>
-                            <ArtistsValueChart wallet={row.original.wallet} proportionDesktop={3}/>
-                        </Box>
-
-                    </Box>
                 </Box>
             )}
         />

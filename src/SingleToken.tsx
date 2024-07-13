@@ -22,9 +22,13 @@ function SingleToken(props: SingleTokenProps) {
 
 
     return (
-        <Box component="section" sx={{ p: 2, border: '1px dashed grey' }}>
+        <Box component="section" sx={{p: 2, border: '1px dashed grey'}}>
+            <div>
+                <img height={200}
+                     src={props.url}
+                     loading="lazy"
 
-        <div><img src={props.url}/></div>
+                 alt={""}/></div>
         </Box>
     );
 }
