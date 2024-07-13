@@ -24,10 +24,29 @@ export const mockTraits: TraitCombination[] = [
             paper: "Black Black",
             margins: "3%",
             format: "Large square",
-            background: "Cloud", texture: "Paper",
+            background: "Cloud",
+            texture: "Paper",
             mention: "_",
-            bark: "Waves", threadFlow: "Ring",
+            bark: "Waves",
+            threadFlow: "Ring",
             thread: "Double"
         },
         ids: ['1', '2', '3']
-    }]
+    },
+    {
+        quantity: 100,
+        traitCombination: {
+            treeChoice: "Abnormal",
+            paper: "Green Black",
+            margins: "5%",
+            format: "Large square",
+            background: "Cloud",
+            texture: "Paper",
+            mention: "_",
+            bark: "Waves",
+            threadFlow: "Ring",
+            thread: "Double"
+        },
+        ids: ['1', '2', '3']
+    }
+]

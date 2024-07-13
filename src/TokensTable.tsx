@@ -3,8 +3,9 @@ import React, {useMemo, useState} from 'react';
 //Material-UI Imports
 import {Box,} from '@mui/material';
 
-import MaterialReactTable, {MRT_ColumnDef, MRT_ColumnFiltersState, MRT_SortingState} from 'material-react-table';
+import MaterialReactTable, {MRT_ColumnDef, MRT_SortingState} from 'material-react-table';
 import TokenList from "./TokenList";
+import {mockTraits, TraitCombination} from "./models/TraitCombinations";
 
 
 const TokensTable = () => {
@@ -13,86 +14,113 @@ const TokensTable = () => {
     const [sorting, setSorting] = useState<MRT_SortingState>([{id: "total_value", desc: true}]);
 
     const rowsPerPage = 10;
-    const [loadedTokens, setLoadedTokens] = useState<Profile[]>([]);
+    const [tokenTraits, setTokenTraits] = useState<TraitCombination[]>(mockTraits);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: rowsPerPage,
     });
-    const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
-        [],
-    );
-    let aliasFilter = columnFilters.find((fil) => fil.id === 'alias');
-    let aliasFilterString = aliasFilter != null ? String(aliasFilter.value) : "";
 
-    const columns = useMemo<MRT_ColumnDef<any>[]>(
+    const columns = useMemo<MRT_ColumnDef<TraitCombination>[]>(
         () => [
             {
-                id: 'position',
-                accessorFn: (row) => row.position,
+                quantity: 'quantity',
+                accessorFn: (row) => row.quantity,
                 size: 30,
                 enableClickToCopy: false,
-                header: '#',
+                header: 'quantity',
                 enableColumnFilter: false,
                 enableSorting: false,
             },
             {
-                id: 'avatar', //id is still required when using accessorFn instead of accessorKey
-                header: 'Avatar',
-                size: 50,
-                Cell: ({renderedCellValue, row}) => {
-                    return (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <a href={`/${PROFILE_PATH}/${row.original.wallet}`}>
-                                <img
-                                    alt="avatar"
-                                    height={50}
-                                    src={row.original.thumbnail_url}
-                                    loading="lazy"
-                                /></a>
-                            {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
-                            <span>{renderedCellValue}</span>
-                        </Box>
-                    )
-                },
-            },
-
-            {
-                id: 'alias',
-                accessorFn: (row) => <a href={`/${PROFILE_PATH}/${row.wallet}`}>{getDomainProfileOrWallet(row)}</a>,
+                background: 'background',
+                accessorFn: (row) => row.traitCombination.background,
+                size: 30,
                 enableClickToCopy: false,
-                header: 'Alias',
-                enableColumnFilter: true,
-                sortDescFirst: true,
-                enableMultiSort: false,
-            },
-
-            {
-                accessorFn: (row) => row.total_value,
-                id: 'total_value', //id is still required when using accessorFn instead of accessorKey
-                header: 'Value',
-                size: 100,
-                sortDescFirst: true,
+                header: 'background',
                 enableColumnFilter: false,
-                enableMultiSort: false,
-                enableSorting: true,
-                Cell: ({row}) => (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
-                        }}
-                    >
-                        {formatTez(row.original.total_value)}
-                    </Box>
-                ),
+                enableSorting: false,
             },
-
+            {
+                bark: 'bark',
+                accessorFn: (row) => row.traitCombination.bark,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'bark',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                format: 'format',
+                accessorFn: (row) => row.traitCombination.format,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'format',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                margins: 'margins',
+                accessorFn: (row) => row.traitCombination.margins,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'margins',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                paper: 'paper',
+                accessorFn: (row) => row.traitCombination.paper,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'paper',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                mention: 'mention',
+                accessorFn: (row) => row.traitCombination.mention,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'mention',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                texture: 'texture',
+                accessorFn: (row) => row.traitCombination.texture,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'texture',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                thread: 'thread',
+                accessorFn: (row) => row.traitCombination.thread,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'thread',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                threadFlow: 'threadFlow',
+                accessorFn: (row) => row.traitCombination.threadFlow,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'threadFlow',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                treeChoice: 'treeChoice',
+                accessorFn: (row) => row.traitCombination.treeChoice,
+                size: 30,
+                enableClickToCopy: false,
+                header: 'treeChoice',
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
         ],
         [],
     );
@@ -100,7 +128,7 @@ const TokensTable = () => {
     return (
         <MaterialReactTable
             columns={columns}
-            data={loadedTokens}
+            data={tokenTraits}
             positionToolbarAlertBanner="bottom"
             enableColumnActions={false}
             enableTopToolbar={false}
@@ -124,10 +152,9 @@ const TokensTable = () => {
             }}
 
             manualFiltering
-            onColumnFiltersChange={setColumnFilters}
             enableDensityToggle={false}
             initialState={{density: 'compact'}}
-            state={{pagination, isLoading, showProgressBars: isLoading, showColumnFilters: true, sorting}}
+            state={{pagination, isLoading, showProgressBars: isLoading, showColumnFilters: false, sorting}}
 
             manualSorting
             onSortingChange={setSorting}
@@ -141,7 +168,7 @@ const TokensTable = () => {
                         gap: '1rem',
                     }}
                 >
-                    <TokenList ids={tokenIds}/>
+                    <TokenList ids={row.original.ids}/>
 
                 </Box>
             )}
